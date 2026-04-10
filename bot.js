@@ -553,6 +553,7 @@ bot.hears('📖 База знань', (ctx) => {
             [Markup.button.callback('🖋 Правопис', 'show_orthography'), Markup.button.callback('📚 Лексикологія', 'show_lexicon')],
             [Markup.button.callback('🚫 Антисуржик', 'show_antisurzyk'), Markup.button.callback('🗣️ Наголоси', 'show_accents')],
             [Markup.button.callback('✍️ Пунктуація', 'show_punctuation'), Markup.button.callback('📂 Ділове мовлення', 'show_business')],
+            [Markup.button.callback('🏛️ Синтаксис', 'show_syntax')],
             [Markup.button.callback('🎭 Фразеологізми', 'show_idioms')]
         ])
     });
@@ -646,7 +647,11 @@ bot.action('show_syntax', async (ctx) => {
             [{ text: "Додаток", callback_data: "syn_object" }, { text: "Обставина", callback_data: "syn_adverbial" }]
         ]
     };
-    await ctx.reply("<b>📚 Оберіть член речення для вивчення:</b>", { parse_mode: 'HTML', reply_markup: keyboard });
+    // Використовуємо editMessageText, щоб меню виглядало цілісним
+    await ctx.editMessageText("<b>📚 Оберіть член речення:</b>", { 
+        parse_mode: 'HTML', 
+        reply_markup: keyboard 
+    });
 });
 
 // Обробник для кожної конкретної кнопки
