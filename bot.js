@@ -549,13 +549,15 @@ bot.hears('Головні правила', (ctx) => {
 bot.hears('📖 База знань', (ctx) => {
     ctx.reply('📚 <b>Оберіть розділ для вивчення:</b>', {
         parse_mode: 'HTML',
-        ...Markup.inlineKeyboard([
-            [Markup.button.callback('🖋 Правопис', 'show_orthography'), Markup.button.callback('📚 Лексикологія', 'show_lexicon')],
-            [Markup.button.callback('🚫 Антисуржик', 'show_antisurzyk'), Markup.button.callback('🗣️ Наголоси', 'show_accents')],
-            [Markup.button.callback('✍️ Пунктуація', 'show_punctuation'), Markup.button.callback('📂 Ділове мовлення', 'show_business')],
-            [Markup.button.callback('🏛️ Синтаксис', 'show_syntax')],
-            [Markup.button.callback('🎭 Фразеологізми', 'show_idioms')]
-        ])
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: '🖋 Правопис', callback_data: 'show_orthography' }, { text: '📚 Лексикологія', callback_data: 'show_lexicon' }],
+                [{ text: '🚫 Антисуржик', callback_data: 'show_antisurzyk' }, { text: '🗣️ Наголоси', callback_data: 'show_accents' }],
+                [{ text: '✍️ Пунктуація', callback_data: 'show_punctuation' }, { text: '📂 Ділове мовлення', callback_data: 'show_business' }],
+                [{ text: '🏛️ Синтаксис', callback_data: 'show_syntax' }],
+                [{ text: '🎭 Фразеологізми', callback_data: 'show_idioms' }]
+            ]
+        }
     });
 });
 
