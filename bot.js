@@ -658,3 +658,13 @@ process.once('SIGTERM', () => bot.stop('SIGTERM'));
 // bot.hears('Текст', (ctx) => { ... }) — кнопка (reply keyboard)
 // ctx.reply('Текст', mainMenu) — відповідь з меню
 // ctx.replyWithMarkdown('Текст *жирний* _курсив_')
+const http = require('http');
+
+// Створюємо сервер, щоб Render не закривав сервіс через відсутність порту
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.write('Бот працює!');
+    res.end();
+}).listen(process.env.PORT || 3000, () => {
+    console.log('Dummy server is running for Render');
+});
