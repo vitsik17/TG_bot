@@ -392,6 +392,48 @@ const businessSpeech = [
         example: "💡 <i>Просимо вибачення за затримку з відповіддю.</i>"
     }
 ];
+
+const syntaxData = {
+    subject: {
+        title: "🟦 ПІДМЕТ (Subject)",
+        text: "<b>Підмет</b> — головний член речення, що вказує на предмет, про який йдеться.\n\n" +
+              "❓ <b>Питання:</b> хто? що?\n" +
+              "✍️ <b>Підкреслюємо:</b> <code>_______</code> (однією лінією)\n\n" +
+              "💡 <b>Чим виражається:</b> найчастіше іменником або займенником у називному відмінку. Може бути словосполученням (<i>батько з сином</i>).\n\n" +
+              "✅ <b>Приклад:</b> <u>Україна</u> переможе."
+    },
+    predicate: {
+        title: "🟥 ПРИСУДОК (Predicate)",
+        text: "<b>Присудок</b> — головний член речення, що означає дію, стан або ознаку підмета.\n\n" +
+              "❓ <b>Питання:</b> що робить підмет? який він є?\n" +
+              "✍️ <b>Підкреслюємо:</b> <code>=======</code> (двома лініями)\n\n" +
+              "💡 <b>Типи:</b> простий (<i>співає</i>) та складений (<i>хоче співати</i>, <i>був тихим</i>).\n\n" +
+              "✅ <b>Приклад:</b> Сонце <b>встає</b>."
+    },
+    attribute: {
+        title: "🟨 ОЗНАЧЕННЯ (Attribute)",
+        text: "<b>Означення</b> — другорядний член речення, який вказує на ознаку предмета.\n\n" +
+              "❓ <b>Питання:</b> який? чий? котрий?\n" +
+              "✍️ <b>Підкреслюємо:</b> <code>~~~~~~~</code> (хвилястою лінією)\n\n" +
+              "💡 <b>Нюанс:</b> завжди залежить від іменника і робить мову яскравішою.\n\n" +
+              "✅ <b>Приклад:</b> <u>Рідна</u> мова — <u>найцінніший</u> скарб."
+    },
+    object: {
+        title: "🟩 ДОДАТОК (Object)",
+        text: "<b>Додаток</b> — другорядний член речення, що означає предмет, на який спрямована дія.\n\n" +
+              "❓ <b>Питання:</b> кого? чого? кому? чому? ким? чим? (усі, крім називного)\n" +
+              "✍️ <b>Підкреслюємо:</b> <code>- - - -</code> (пунктиром)\n\n" +
+              "✅ <b>Приклад:</b> Я читаю (що?) <u>книжку</u>."
+    },
+    adverbial: {
+        title: "🟧 ОБСТАВИНА (Adverbial)",
+        text: "<b>Обставина</b> — другорядний член речення, що вказує на місце, час, причину або спосіб дії.\n\n" +
+              "❓ <b>Питання:</b> де? коли? як? куди? звідки?\n" +
+              "✍️ <b>Підкреслюємо:</b> <code>- . - .</code> (пунктир з крапкою)\n\n" +
+              "✅ <b>Приклад:</b> Поїзд прибув (коли?) <u>вчасно</u>."
+    }
+};
+
 // ==== ЗБЕРЕЖЕННЯ СТАНУ В database.json ====
 const dbPath = path.join(__dirname, 'database.json');
 
@@ -592,6 +634,39 @@ bot.action('show_business', async (ctx) => {
         response += `${item.title}\n📖 ${item.rule}\n${item.example}\n\n`;
     });
     await ctx.reply(response, { parse_mode: 'HTML' });
+});
+
+// Головна кнопка "Синтаксис" у меню
+bot.action('show_syntax', async (ctx) => {
+    await ctx.answerCbQuery();
+    const keyboard = {
+        inline_keyboard: [
+            [{ text: "Підмет", callback_data: "syn_subject" }, { text: "Присудок", callback_data: "syn_predicate" }],
+            [{ text: "Означення", callback_data: "syn_attribute" }],
+            [{ text: "Додаток", callback_data: "syn_object" }, { text: "Обставина", callback_data: "syn_adverbial" }]
+        ]
+    };
+    await ctx.reply("<b>📚 Оберіть член речення для вивчення:</b>", { parse_mode: 'HTML', reply_markup: keyboard });
+});
+
+// Обробник для кожної конкретної кнопки
+const members = ['subject', 'predicate', 'attribute', 'object', 'adverbial'];
+
+members.forEach(member => {
+    bot.action(`syn_${member}`, async (ctx) => {
+        await ctx.answerCbQuery();
+        const data = syntaxData[member];
+        
+        // Кнопка для повернення назад до списку
+        const backKeyboard = {
+            inline_keyboard: [[{ text: "⬅️ Назад до списку", callback_data: "show_syntax" }]]
+        };
+
+        await ctx.editMessageText(`<b>${data.title}</b>\n\n${data.text}`, {
+            parse_mode: 'HTML',
+            reply_markup: backKeyboard
+        });
+    });
 });
 
 // ==== /parts: команда для деталізованого довідника ====
