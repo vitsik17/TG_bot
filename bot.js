@@ -554,7 +554,7 @@ bot.action('show_accents', async (ctx) => {
     await ctx.answerCbQuery();
     let response = "<b>🗣️ СКЛАДНІ НАГОЛОСИ</b>\n\n";
     accentRules.forEach(item => {
-        response += `• <b>${item.word}</b> — ${item.note}\n`;
+        response += ` • ${item.word} — ${item.note}\n`;
     });
     await ctx.reply(response, { parse_mode: 'HTML' });
 });
@@ -662,9 +662,6 @@ const http = require('http');
 
 // Створюємо сервер, щоб Render не закривав сервіс через відсутність порту
 http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.write('Бот працює!');
-    res.end();
-}).listen(process.env.PORT || 3000, () => {
-    console.log('Dummy server is running for Render');
-});
+    res.writeHead(200);
+    res.end('Бот працює!');
+  }).listen(process.env.PORT || 3000, '0.0.0.0');
