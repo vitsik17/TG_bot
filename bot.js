@@ -744,6 +744,6 @@ const http = require('http');
 
 // Створюємо сервер, щоб Render не закривав сервіс через відсутність порту
 http.createServer((req, res) => {
-    res.writeHead(200);
-    res.end('Бот працює!');
-  }).listen(process.env.PORT || 3000, '0.0.0.0');
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK'); // Тільки два символи — це мінімум, який зрозуміє будь-який сервіс
+}).listen(process.env.PORT || 3000, '0.0.0.0');
